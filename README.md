@@ -5,13 +5,15 @@
 ---
 
 ## 📂 프로젝트 구조
+```
 streamlit-redis-chatbot/
-│── app_redis.py         # Streamlit 메인 앱
-│── utils_redis.py       # Redis 유틸 함수 모음
-│── test_redis.py        # Redis 연동 테스트 코드
-│── requirements.txt     # Python 의존성 목록
-│── .env.example         # 환경 변수 예시 파일
+│── app_redis.py          # Streamlit 메인 앱
+│── utils_redis.py        # Redis 유틸 함수 모음
+│── test_redis.py         # Redis 연동 테스트 코드
+│── requirements.txt      # Python 의존성 목록
+│── .env.example          # 환경 변수 예시 파일
 └── README.md
+```
 
 ## ⚙️ 주요 기능
 - Streamlit UI: 간단한 웹 챗봇 인터페이스 제공
