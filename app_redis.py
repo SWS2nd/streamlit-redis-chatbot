@@ -23,7 +23,7 @@ Modifications:
 """
 import os
 import streamlit as st
-from dotenv import load_dotenv
+
 from utils_redis import init_conversation, print_conversation ,StreamHandler
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_community.chat_message_histories import RedisChatMessageHistory
@@ -39,13 +39,17 @@ from langchain_upstage import ChatUpstage
 st.set_page_config(page_title="SSAC_TALK",page_icon="🍀")
 st.title("🍀 SSAC_TALK")
 
-# 로컬 환경인지 확인 (st.secrets가 없거나 비어있는 경우)
-if not hasattr(st, 'secrets') or not st.secrets:
+# .env 파일이 로컬에 있는지 확인하여 환경을 구분합니다.
+dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+if os.path.exists(dotenv_path):
+    # .env 파일이 있으면 로컬 환경입니다.
+    from dotenv import load_dotenv
     load_dotenv()
+    st.info("로컬 환경입니다. .env 파일에서 환경 변수를 로드합니다.")
 else:
-    # Streamlit Cloud 환경인 경우
-    for key, value in st.secrets.items():
-        os.environ[key] = value
+    # .env 파일이 없으면 Streamlit Cloud 환경으로 간주합니다.
+    # st.secrets에 설정된 값들은 이미 os.environ에 로드되어 있습니다.
+    pass
 
 # Redis 서버의 URL 불러오기
 REDIS_URL = os.getenv("REDIS_URL")
