@@ -21,6 +21,7 @@ Modifications:
 - [2024-07-23]: Added and modified some comments for clarification and added a docstring by jonhyuk0922
 
 """
+import os
 import streamlit as st
 from utils_redis import init_conversation, print_conversation ,StreamHandler
 from langchain_community.chat_message_histories import ChatMessageHistory
@@ -32,18 +33,30 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
 from langchain_upstage import ChatUpstage
 
-from dotenv import load_dotenv
-import os
 
 # 페이지 표시 및 타이틀 입력
 st.set_page_config(page_title="SSAC_TALK",page_icon="🍀")
 st.title("🍀 SSAC_TALK")
 
-# dotenv 로 key 불러오기
-load_dotenv()
+# Streamlit Cloud 환경인지 확인합니다.
+if 'secrets' in st.__dict__ and len(st.secrets) > 0:
+    # Streamlit Cloud 환경인 경우, st.secrets에서 환경 변수를 로드합니다.
+    # 이렇게 하면 Secrets에 설정된 변수만 사용하게 됩니다.
+    for key, value in st.secrets.items():
+        os.environ[key] = value
+else:
+    # 로컬 환경인 경우, dotenv를 사용하여 .env 파일에서 환경 변수를 로드합니다.
+    from dotenv import load_dotenv
+    load_dotenv()
 
 # Redis 서버의 URL 불러오기
 REDIS_URL = os.getenv("REDIS_URL")
+
+# 가져온 키/URL을 사용하여 애플리케이션 로직을 작성합니다.
+# 예를 들어, Redis URL이 올바른지 확인하는 로직입니다.
+if not REDIS_URL:
+    st.error("오류: 환경 변수 'REDIS_URL'이 설정되지 않았습니다. Secrets 또는 .env 파일을 확인하세요.")
+    st.stop()
 
 # LANGCHAIN_TRACING_V2 환경 변수를 "true"로 설정합니다.
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
